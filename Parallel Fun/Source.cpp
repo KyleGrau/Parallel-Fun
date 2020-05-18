@@ -6,6 +6,7 @@ struct stuff {
 	unsigned int myCounter;
 };
 
+//Thread takes a blob as a pointer...just statically cast to whatever data type you need
 DWORD WINAPI myThread(LPVOID lpParameter)
 {
 	stuff* data = (stuff*)lpParameter;
@@ -41,7 +42,7 @@ int main(int argc, char* argv[])
 		0
 	};
 
-	
+	//Required for creating a thread in windows
 	DWORD myThreadID;
 	HANDLE myHandle = CreateThread(0, 0, myThread, &data, 0, &myThreadID);
 
@@ -73,6 +74,8 @@ int main(int argc, char* argv[])
 	}
 
 	cout << "Done counting in main thread." << endl;
+
+	//Need to wait for thread to finish, otherwise common runtime will throw exceptions upon returning from main
 	WaitForSingleObject(myHandle, INFINITE);
 
 	TerminateThread(myHandle, 0);
